@@ -1,7 +1,9 @@
 """Unit tests for the core migration_docs module"""
 from contextlib import ExitStack as does_not_raise
 
+import django
 from django.db.migrations.executor import MigrationExecutor
+from django.db.migrations.loader import MigrationLoader
 import pytest
 
 from migration_docs import core
@@ -77,8 +79,13 @@ def test_migration_properties(
 
 @pytest.mark.django_db
 def test_bad_migration_sql_collection(mocker):
+    if django.VERSION[0] >= 3 and django.VERSION[1] >= 1:
+        MigrationSqlClass = MigrationLoader
+    else:
+        MigrationSqlClass = MigrationExecutor
+
     mocker.patch.object(
-        MigrationExecutor,
+        MigrationSqlClass,
         'collect_sql',
         autospec=True,
         side_effect=RuntimeError('Cannot collect.'),

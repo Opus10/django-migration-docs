@@ -5,6 +5,7 @@ import os
 import pathlib
 
 import click
+import django
 from django.conf import settings
 from django.db import connections
 from django.db.migrations import executor as django_migration_executor
@@ -107,8 +108,15 @@ class Migration:
     @cached_property
     def sql(self):
         """The raw SQL for the migration"""
+        if django.VERSION[0] >= 3 and django.VERSION[1] >= 1:
+            migration_sql_obj = self._loader
+        else:
+            migration_sql_obj = self._executor
+
         try:
-            sql_statements = self._executor.collect_sql([(self._node, False)])
+            sql_statements = migration_sql_obj.collect_sql(
+                [(self._node, False)]
+            )
             return '\n'.join(sql_statements)
         except Exception as exc:
             return f'Error obtaining SQL - "{exc}"'
@@ -357,7 +365,7 @@ def sync(msg=_pretty_msg):
     # Run any configured pre-sync hooks
     pre_sync_hooks = getattr(settings, 'MIGRATION_DOCS_PRE_SYNC_HOOKS', [])
     if pre_sync_hooks:
-        msg(f'django-migration-docs: Running pre-sync hooks...')
+        msg('django-migration-docs: Running pre-sync hooks...')
         for pre_sync_hook in pre_sync_hooks:
             msg(pre_sync_hook, fg='yellow')
             utils.shell(pre_sync_hook)

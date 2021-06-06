@@ -10,7 +10,7 @@ Setup
 
 Set up your development environment with::
 
-    git clone git@github.com:jyveapp/django-migration-docs.git
+    git clone git@github.com:Opus10/django-migration-docs.git
     cd django-migration-docs
     make setup
 
