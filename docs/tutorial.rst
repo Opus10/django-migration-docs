@@ -175,13 +175,13 @@ render the migrations:
   {% endfor %}
 
 When ``manage.py migration_docs show`` is called, the migrations are loaded
-in a `Migrations` object that is passed to the template.
+in a `migration_docs.Migrations` object that is passed to the template.
 
 Users can override
 the `Jinja2 <jinja.palletsprojects.com>`__ template used for rendering the docs
 by providing a ``.migration-docs/show.tpl`` Jinja2 template.
-The ``migrations`` variable in the template is a list of `Migration` objects,
-and each `Migration` not only has many of the base attributes
+The ``migrations`` variable in the template is a list of `migration_docs.Migration` objects,
+and each `migration_docs.Migration` not only has many of the base attributes
 (e.g. ``sql``, ``applied``, ``hash``, etc), but also has an attribute for
 every custom attribute specified in the ``.migration-docs/migration.yaml`` file.
 This allows us to render whatever information about migrations are necessary.
@@ -198,8 +198,8 @@ Markdown format):
     **type** {{ migration.type }}
   {% endfor %}
 
-The ``migrations`` variable is a `Migrations` object, which allows filtering
-and grouping on `Migration` attributes. For example, to group each migration
+The ``migrations`` variable is a `migration_docs.Migrations` object, which allows filtering
+and grouping on `migration_docs.Migration` attributes. For example, to group each migration
 by ``type`` and show sections for each type, use the following template:
 
 .. code-block:: jinja
@@ -231,9 +231,9 @@ The template from above will result in output looking like:
     **author** John Doe
 
 
-Check out the `Migrations` doc for more methods that you can use in custom
-Jinja templates. The `Migrations` construct also allows for arbitrary filtering
-of `Migration` elements.
+Check out the `migration_docs.Migrations` doc for more methods that you can use in custom
+Jinja templates. The `migration_docs.Migrations` construct also allows for arbitrary filtering
+of `migration_docs.Migration` elements.
 
 The ``manage.py migration_docs show`` command also comes with the following
 options:
