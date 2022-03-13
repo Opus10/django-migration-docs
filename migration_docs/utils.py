@@ -6,9 +6,7 @@ import subprocess
 
 def shell(cmd, check=True, stdin=None, stdout=None, stderr=None):
     """Runs a subprocess shell with check=True by default"""
-    return subprocess.run(
-        cmd, shell=True, check=check, stdin=stdin, stdout=stdout, stderr=stderr
-    )
+    return subprocess.run(cmd, shell=True, check=check, stdin=stdin, stdout=stdout, stderr=stderr)
 
 
 def _equals(a, b, match=False):
@@ -42,9 +40,7 @@ class FilterableUserList(collections.UserList):
         """
         obj = copy.copy(self)
         obj.data = [
-            element
-            for element in self.data
-            if _equals(getattr(element, attr), value, match=match)
+            element for element in self.data if _equals(getattr(element, attr), value, match=match)
         ]
         return obj
 
@@ -79,11 +75,7 @@ class FilterableUserList(collections.UserList):
             ``self.__class__``: A copy of the filtered list object.
         """
         obj = copy.copy(self)
-        obj.data = [
-            element
-            for element in self.data
-            if getattr(element, attr) in values
-        ]
+        obj.data = [element for element in self.data if getattr(element, attr) in values]
         return obj
 
     def group(
@@ -109,24 +101,18 @@ class FilterableUserList(collections.UserList):
             `collections.OrderedDict`: A dictionary of ``self.__class__`` keyed
             on groups.
         """
-        if any([ascending_keys, descending_keys]) and not any(
-            [none_key_first, none_key_last]
-        ):
+        if any([ascending_keys, descending_keys]) and not any([none_key_first, none_key_last]):
             # If keys are sorted, default to making the "None" key last
             none_key_last = True
 
         # Get the natural ordering of the keys
         keys = list(
-            collections.OrderedDict(
-                (getattr(commit, attr), True) for commit in self
-            ).keys()
+            collections.OrderedDict((getattr(commit, attr), True) for commit in self).keys()
         )
 
         # Re-sort the keys
         if any([ascending_keys, descending_keys]):
-            sorted_keys = sorted(
-                (k for k in keys if k is not None), reverse=descending_keys
-            )
+            sorted_keys = sorted((k for k in keys if k is not None), reverse=descending_keys)
             if None in keys:
                 sorted_keys.append(None)
 
@@ -137,6 +123,4 @@ class FilterableUserList(collections.UserList):
             keys.remove(None)
             keys.insert(0 if none_key_first else len(keys), None)
 
-        return collections.OrderedDict(
-            (key, self.filter(attr, key)) for key in keys
-        )
+        return collections.OrderedDict((key, self.filter(attr, key)) for key in keys)

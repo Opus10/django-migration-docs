@@ -76,9 +76,7 @@ class Migration:
     @cached_property
     def hash(self):
         """The MD5 hash of the migration file"""
-        return hashlib.md5(
-            inspect.getsource(inspect.getmodule(self._node)).encode()
-        ).hexdigest()
+        return hashlib.md5(inspect.getsource(inspect.getmodule(self._node)).encode()).hexdigest()
 
     @property
     def atomic(self):
@@ -108,15 +106,13 @@ class Migration:
     @cached_property
     def sql(self):
         """The raw SQL for the migration"""
-        if django.VERSION[0] >= 3 and django.VERSION[1] >= 1:
+        if (django.VERSION[0] >= 3 and django.VERSION[1] >= 1) or django.VERSION[0] >= 4:
             migration_sql_obj = self._loader
         else:
             migration_sql_obj = self._executor
 
         try:
-            sql_statements = migration_sql_obj.collect_sql(
-                [(self._node, False)]
-            )
+            sql_statements = migration_sql_obj.collect_sql([(self._node, False)])
             return '\n'.join(sql_statements)
         except Exception as exc:
             return f'Error obtaining SQL - "{exc}"'
@@ -163,9 +159,7 @@ class Migration:
         self._docs[self.label]['sql'] = self.sql
 
         if prompt:
-            self._docs[self.label].update(
-                self._docs.schema.prompt(defaults=defaults)
-            )
+            self._docs[self.label].update(self._docs.schema.prompt(defaults=defaults))
 
         self._docs.save()
 
@@ -182,9 +176,7 @@ class Migrations(utils.FilterableUserList):
             connection, ignore_no_migrations=True
         )
         self._graph = self._loader.graph
-        self._executor = django_migration_executor.MigrationExecutor(
-            connection
-        )
+        self._executor = django_migration_executor.MigrationExecutor(connection)
         self._docs = MigrationDocs()
 
         self._migrations = {
@@ -207,9 +199,7 @@ class Migrations(utils.FilterableUserList):
                 if migration not in seen:  # pragma: no branch
                     # We don't cover the "else" branch of this statement since
                     # our test models dont have complex enough migrations
-                    self.data.append(
-                        self._migrations[str(self._graph.nodes[migration])]
-                    )
+                    self.data.append(self._migrations[str(self._graph.nodes[migration])])
                     seen.add(migration)
 
     def __getitem__(self, i):
@@ -285,9 +275,7 @@ class MigrationDocs(collections.UserDict):
         description for the migration.
         """
         try:
-            with open(
-                _get_migration_docs_file_path('migration.yaml'), 'r'
-            ) as f:
+            with open(_get_migration_docs_file_path('migration.yaml'), 'r') as f:
                 schema = yaml.safe_load(f)
         except IOError:
             schema = [
@@ -320,9 +308,7 @@ class MigrationDocs(collections.UserDict):
 
         yaml.Dumper.add_representer(
             collections.OrderedDict,
-            lambda dumper, data: dumper.represent_mapping(
-                'tag:yaml.org,2002:map', data.items()
-            ),
+            lambda dumper, data: dumper.represent_mapping('tag:yaml.org,2002:map', data.items()),
         )
         ordered_docs = collections.OrderedDict(
             (label, docs) for label, docs in sorted(self.data.items())
@@ -345,9 +331,7 @@ def bootstrap(msg=_pretty_msg):
         RuntimeError: When migration docs have already been synced
     """
     if MigrationDocs():
-        raise RuntimeError(
-            'Cannot bootstrap when migration docs have already been synced.'
-        )
+        raise RuntimeError('Cannot bootstrap when migration docs have already been synced.')
 
     Migrations().bootstrap_docs()
 
@@ -421,9 +405,7 @@ def update(migrations, msg=_pretty_msg):
         try:
             migration_objs[migration].set_docs()
         except KeyError:
-            msg(
-                f'Migration with label "{migration}" does not exist.', fg='red'
-            )
+            msg(f'Migration with label "{migration}" does not exist.', fg='red')
 
 
 def check(msg=_pretty_msg):
@@ -446,29 +428,25 @@ def check(msg=_pretty_msg):
 
     if missing_docs:
         msg(
-            f'django-migration-docs: Found no docs for {len(missing_docs)}'
-            ' migration(s).',
+            f'django-migration-docs: Found no docs for {len(missing_docs)}' ' migration(s).',
             fg='red',
         )
 
     if stale_docs:
         msg(
-            f'django-migration-docs: Found {len(stale_docs)} stale'
-            ' migration doc(s).',
+            f'django-migration-docs: Found {len(stale_docs)} stale' ' migration doc(s).',
             fg='red',
         )
 
     if excess_docs:
         msg(
-            f'django-migration-docs: Found docs for {len(excess_docs)}'
-            ' deleted migration(s).',
+            f'django-migration-docs: Found docs for {len(excess_docs)}' ' deleted migration(s).',
             fg='red',
         )
 
     if missing_docs or stale_docs or excess_docs:
         msg(
-            'django-migration-docs: Run "manage.py migration_docs sync" to'
-            ' fix errors.',
+            'django-migration-docs: Run "manage.py migration_docs sync" to' ' fix errors.',
             fg='red',
         )
         return False
@@ -508,14 +486,10 @@ def show(app_labels=None, unapplied=False, style='default'):
     except jinja2.exceptions.TemplateNotFound:
         if style == 'default':
             # Use the default migration template if the user didn't provide one
-            template = jinja2.Template(
-                DEFAULT_MIGRATION_TEMPLATE, trim_blocks=True
-            )
+            template = jinja2.Template(DEFAULT_MIGRATION_TEMPLATE, trim_blocks=True)
         else:
             raise
 
-    rendered = template.render(
-        migrations=migrations, app_labels=app_labels, unapplied=unapplied
-    )
+    rendered = template.render(migrations=migrations, app_labels=app_labels, unapplied=unapplied)
 
     return rendered

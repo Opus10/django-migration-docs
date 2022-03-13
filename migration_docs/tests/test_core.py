@@ -66,9 +66,7 @@ from migration_docs import core
         ),
     ],
 )
-def test_migration_properties(
-    migration_name, attribute, expected_exception, expected_value
-):
+def test_migration_properties(migration_name, attribute, expected_exception, expected_value):
     """Asserts various properties of migrations from the test models"""
 
     migrations = core.Migrations()
@@ -79,7 +77,7 @@ def test_migration_properties(
 
 @pytest.mark.django_db
 def test_bad_migration_sql_collection(mocker):
-    if django.VERSION[0] >= 3 and django.VERSION[1] >= 1:
+    if (django.VERSION[0] >= 3 and django.VERSION[1] >= 1) or django.VERSION[0] >= 4:
         MigrationSqlClass = MigrationLoader
     else:
         MigrationSqlClass = MigrationExecutor

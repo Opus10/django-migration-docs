@@ -245,15 +245,9 @@ def test_migration_docs_show(
             # Test the scenario where there are extra migration docs that
             # should be deleted
             {
-                'tests.0001_initial': {
-                    '_hash': 'd1468bb233398bcc089bd33151f51cd3'
-                },
-                'tests.0002_testmodel_field2': {
-                    '_hash': '8cb7f6747d4ef78074521309d5d05a2c'
-                },
-                'tests.0003_testmodel_field3': {
-                    '_hash': 'e53ffdcc6e8b9cc7f8a960e49968040f'
-                },
+                'tests.0001_initial': {'_hash': 'd1468bb233398bcc089bd33151f51cd3'},
+                'tests.0002_testmodel_field2': {'_hash': '8cb7f6747d4ef78074521309d5d05a2c'},
+                'tests.0003_testmodel_field3': {'_hash': 'e53ffdcc6e8b9cc7f8a960e49968040f'},
                 'deleted_migration': {'_hash': 'deleted_hash_value'},
             },
             [],
@@ -264,43 +258,25 @@ def test_migration_docs_show(
                 'django-migration-docs: Successfully synced migration docs.\n'
             ),
             {
-                'tests.0001_initial': {
-                    '_hash': 'd1468bb233398bcc089bd33151f51cd3'
-                },
-                'tests.0002_testmodel_field2': {
-                    '_hash': '8cb7f6747d4ef78074521309d5d05a2c'
-                },
-                'tests.0003_testmodel_field3': {
-                    '_hash': 'e53ffdcc6e8b9cc7f8a960e49968040f'
-                },
+                'tests.0001_initial': {'_hash': 'd1468bb233398bcc089bd33151f51cd3'},
+                'tests.0002_testmodel_field2': {'_hash': '8cb7f6747d4ef78074521309d5d05a2c'},
+                'tests.0003_testmodel_field3': {'_hash': 'e53ffdcc6e8b9cc7f8a960e49968040f'},
             },
         ),
         (
             # Test the scenario where all docs are up to date
             {
-                'tests.0001_initial': {
-                    '_hash': 'd1468bb233398bcc089bd33151f51cd3'
-                },
-                'tests.0002_testmodel_field2': {
-                    '_hash': '8cb7f6747d4ef78074521309d5d05a2c'
-                },
-                'tests.0003_testmodel_field3': {
-                    '_hash': 'e53ffdcc6e8b9cc7f8a960e49968040f'
-                },
+                'tests.0001_initial': {'_hash': 'd1468bb233398bcc089bd33151f51cd3'},
+                'tests.0002_testmodel_field2': {'_hash': '8cb7f6747d4ef78074521309d5d05a2c'},
+                'tests.0003_testmodel_field3': {'_hash': 'e53ffdcc6e8b9cc7f8a960e49968040f'},
             },
             [],
             [],
             ('django-migration-docs: Successfully synced migration docs.\n'),
             {
-                'tests.0001_initial': {
-                    '_hash': 'd1468bb233398bcc089bd33151f51cd3'
-                },
-                'tests.0002_testmodel_field2': {
-                    '_hash': '8cb7f6747d4ef78074521309d5d05a2c'
-                },
-                'tests.0003_testmodel_field3': {
-                    '_hash': 'e53ffdcc6e8b9cc7f8a960e49968040f'
-                },
+                'tests.0001_initial': {'_hash': 'd1468bb233398bcc089bd33151f51cd3'},
+                'tests.0002_testmodel_field2': {'_hash': '8cb7f6747d4ef78074521309d5d05a2c'},
+                'tests.0003_testmodel_field3': {'_hash': 'e53ffdcc6e8b9cc7f8a960e49968040f'},
             },
         ),
         (
@@ -308,24 +284,16 @@ def test_migration_docs_show(
             # were bootstrapped
             {
                 'tests.0001_initial': None,
-                'tests.0002_testmodel_field2': {
-                    '_hash': '8cb7f6747d4ef78074521309d5d05a2c'
-                },
-                'tests.0003_testmodel_field3': {
-                    '_hash': 'e53ffdcc6e8b9cc7f8a960e49968040f'
-                },
+                'tests.0002_testmodel_field2': {'_hash': '8cb7f6747d4ef78074521309d5d05a2c'},
+                'tests.0003_testmodel_field3': {'_hash': 'e53ffdcc6e8b9cc7f8a960e49968040f'},
             },
             [],
             [],
             ('django-migration-docs: Successfully synced migration docs.\n'),
             {
                 'tests.0001_initial': None,
-                'tests.0002_testmodel_field2': {
-                    '_hash': '8cb7f6747d4ef78074521309d5d05a2c'
-                },
-                'tests.0003_testmodel_field3': {
-                    '_hash': 'e53ffdcc6e8b9cc7f8a960e49968040f'
-                },
+                'tests.0002_testmodel_field2': {'_hash': '8cb7f6747d4ef78074521309d5d05a2c'},
+                'tests.0003_testmodel_field3': {'_hash': 'e53ffdcc6e8b9cc7f8a960e49968040f'},
             },
         ),
         (
@@ -333,12 +301,8 @@ def test_migration_docs_show(
             # were bootstrapped. Configures pre-sync hooks
             {
                 'tests.0001_initial': None,
-                'tests.0002_testmodel_field2': {
-                    '_hash': '8cb7f6747d4ef78074521309d5d05a2c'
-                },
-                'tests.0003_testmodel_field3': {
-                    '_hash': 'e53ffdcc6e8b9cc7f8a960e49968040f'
-                },
+                'tests.0002_testmodel_field2': {'_hash': '8cb7f6747d4ef78074521309d5d05a2c'},
+                'tests.0003_testmodel_field3': {'_hash': 'e53ffdcc6e8b9cc7f8a960e49968040f'},
             },
             ['black .'],
             [],
@@ -349,12 +313,8 @@ def test_migration_docs_show(
             ),
             {
                 'tests.0001_initial': None,
-                'tests.0002_testmodel_field2': {
-                    '_hash': '8cb7f6747d4ef78074521309d5d05a2c'
-                },
-                'tests.0003_testmodel_field3': {
-                    '_hash': 'e53ffdcc6e8b9cc7f8a960e49968040f'
-                },
+                'tests.0002_testmodel_field2': {'_hash': '8cb7f6747d4ef78074521309d5d05a2c'},
+                'tests.0003_testmodel_field3': {'_hash': 'e53ffdcc6e8b9cc7f8a960e49968040f'},
             },
         ),
     ],
@@ -502,13 +462,9 @@ def test_migration_docs_update(
             # Test the scenario where one migration has been updated since
             # docs were last synced
             {
-                'tests.0001_initial': {
-                    '_hash': 'd1468bb233398bcc089bd33151f51cd3'
-                },
+                'tests.0001_initial': {'_hash': 'd1468bb233398bcc089bd33151f51cd3'},
                 'tests.0002_testmodel_field2': {'_hash': 'outdated_hash'},
-                'tests.0003_testmodel_field3': {
-                    '_hash': 'e53ffdcc6e8b9cc7f8a960e49968040f'
-                },
+                'tests.0003_testmodel_field3': {'_hash': 'e53ffdcc6e8b9cc7f8a960e49968040f'},
             },
             (
                 'django-migration-docs: Found 1 stale migration doc(s).\n'
@@ -521,15 +477,9 @@ def test_migration_docs_update(
             # Test the scenario where there are extra migration docs that
             # should be deleted
             {
-                'tests.0001_initial': {
-                    '_hash': 'd1468bb233398bcc089bd33151f51cd3'
-                },
-                'tests.0002_testmodel_field2': {
-                    '_hash': '8cb7f6747d4ef78074521309d5d05a2c'
-                },
-                'tests.0003_testmodel_field3': {
-                    '_hash': 'e53ffdcc6e8b9cc7f8a960e49968040f'
-                },
+                'tests.0001_initial': {'_hash': 'd1468bb233398bcc089bd33151f51cd3'},
+                'tests.0002_testmodel_field2': {'_hash': '8cb7f6747d4ef78074521309d5d05a2c'},
+                'tests.0003_testmodel_field3': {'_hash': 'e53ffdcc6e8b9cc7f8a960e49968040f'},
                 'deleted_migration': None,
             },
             (
@@ -543,15 +493,9 @@ def test_migration_docs_update(
         (
             # Test the scenario where all docs are up to date
             {
-                'tests.0001_initial': {
-                    '_hash': 'd1468bb233398bcc089bd33151f51cd3'
-                },
-                'tests.0002_testmodel_field2': {
-                    '_hash': '8cb7f6747d4ef78074521309d5d05a2c'
-                },
-                'tests.0003_testmodel_field3': {
-                    '_hash': 'e53ffdcc6e8b9cc7f8a960e49968040f'
-                },
+                'tests.0001_initial': {'_hash': 'd1468bb233398bcc089bd33151f51cd3'},
+                'tests.0002_testmodel_field2': {'_hash': '8cb7f6747d4ef78074521309d5d05a2c'},
+                'tests.0003_testmodel_field3': {'_hash': 'e53ffdcc6e8b9cc7f8a960e49968040f'},
             },
             ('django-migration-docs: Migration docs are up to date.\n'),
             0,
@@ -663,11 +607,7 @@ def test_migration_filtering(migration_docs_config):
     assert len(migrations.exclude('type', 'before')) == 1
     assert len(migrations.filter('type', 'after')) == 1
     assert (
-        len(
-            migrations.filter('type', 'before').filter(
-                'point_of_contact', '.*jo.*', match=True
-            )
-        )
+        len(migrations.filter('type', 'before').filter('point_of_contact', '.*jo.*', match=True))
         == 1
     )
 
@@ -694,9 +634,7 @@ def test_migration_filtering(migration_docs_config):
         'after',
     ]
     assert list(
-        migrations.group(
-            'point_of_contact', ascending_keys=True, none_key_first=True
-        )
+        migrations.group('point_of_contact', ascending_keys=True, none_key_first=True)
     ) == [None, 'john']
 
     # Verify filtering on applied migrations
@@ -712,12 +650,8 @@ def test_migration_filtering(migration_docs_config):
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize(
-    'pre_migrate_sync, expected_sync_call_count', [(True, 1), (False, 0)]
-)
-def test_pre_migrate_sync(
-    mocker, settings, pre_migrate_sync, expected_sync_call_count
-):
+@pytest.mark.parametrize('pre_migrate_sync, expected_sync_call_count', [(True, 1), (False, 0)])
+def test_pre_migrate_sync(mocker, settings, pre_migrate_sync, expected_sync_call_count):
     settings.MIGRATION_DOCS_PRE_MIGRATE_SYNC = pre_migrate_sync
     patched_sync = mocker.patch('migration_docs.sync', autospec=True)
 
