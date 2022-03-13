@@ -36,6 +36,4 @@ class MigrationDocsConfig(AppConfig):
         """
         Listen for pre-migrate signals and prompt for migration docs.
         """
-        pre_migrate.connect(
-            sync_docs_on_pre_migrate, dispatch_uid='sync_docs_on_pre_migrate'
-        )
+        pre_migrate.connect(sync_docs_on_pre_migrate, dispatch_uid='sync_docs_on_pre_migrate')
