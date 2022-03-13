@@ -1,5 +1,10 @@
 # Changelog
-## 1.0.1 (2020-06-28)
+## 1.0.2 (2022-03-13)
+### Trivial
+  - Updated with the latest template, dropping py3.6 support and adding Django 4 support [Wes Kendall, fa37002]
+  - Updated to the latest Django template [Wes Kendall, dec0d8e]
+
+## 1.0.1 (2020-06-29)
 ### Trivial
   - Added more docs to the README [Wes Kendall, 6b0fe2d]
 
