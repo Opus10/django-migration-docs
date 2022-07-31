@@ -27,7 +27,7 @@ name = "django-migration-docs"
 packages = [
   { include = "migration_docs" }
 ]
-version = "1.0.2"
+version = "1.0.3"
 description = "Sync and validate additional information about your Django migrations."
 authors = ["Juliana de Heer", "Wes Kendall", "Tómas Árni Jónasson"]
 classifiers = [

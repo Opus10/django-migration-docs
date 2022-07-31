@@ -1,4 +1,8 @@
 # Changelog
+## 1.0.3 (2022-07-30)
+### Trivial
+  - Updated with the latest Django template, fixing doc builds [Wes Kendall, cfbe987]
+
 ## 1.0.2 (2022-03-13)
 ### Trivial
   - Updated with the latest template, dropping py3.6 support and adding Django 4 support [Wes Kendall, fa37002]
