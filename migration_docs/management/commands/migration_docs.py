@@ -6,17 +6,17 @@ import migration_docs
 
 
 class SubCommands(BaseCommand):
-    '''
+    """
     Subcommand class vendored in from
     https://github.com/andrewp-as-is/django-subcommands.py
     because of installation issues
-    '''
+    """
 
     argv = []
     subcommands = {}
 
     def add_arguments(self, parser):
-        subparsers = parser.add_subparsers(dest='subcommand', title='subcommands', description='')
+        subparsers = parser.add_subparsers(dest="subcommand", title="subcommands", description="")
         subparsers.required = True
 
         for command_name, command_class in self.subcommands.items():
@@ -24,7 +24,7 @@ class SubCommands(BaseCommand):
 
             subparser = subparsers.add_parser(command_name, help=command_class.help)
             command.add_arguments(subparser)
-            prog_name = subcommand = ''
+            prog_name = subcommand = ""
             if self.argv:
                 prog_name = self.argv[0]
                 subcommand = self.argv[1]
@@ -37,7 +37,7 @@ class SubCommands(BaseCommand):
         return super().run_from_argv(argv)
 
     def handle(self, *args, **options):
-        command_name = options['subcommand']
+        command_name = options["subcommand"]
         self.subcommands.get(command_name)
         command_class = self.subcommands[command_name]
 
@@ -49,21 +49,21 @@ class SubCommands(BaseCommand):
 
 
 class BootstrapCommand(BaseCommand):
-    help = 'Bootstraps initial empty migration docs for a project.'
+    help = "Bootstraps initial empty migration docs for a project."
 
     def handle(self, *args, **options):
         migration_docs.bootstrap()
 
 
 class SyncCommand(BaseCommand):
-    help = 'Adds, updates, and removes migration docs for a project.'
+    help = "Adds, updates, and removes migration docs for a project."
 
     def handle(self, *args, **options):
         migration_docs.sync()
 
 
 class CheckCommand(BaseCommand):
-    help = 'Checks that the migration docs are in sync.'
+    help = "Checks that the migration docs are in sync."
 
     def handle(self, *args, **options):
         if not migration_docs.check():
@@ -73,50 +73,50 @@ class CheckCommand(BaseCommand):
 
 
 class ShowCommand(BaseCommand):
-    help = 'Renders the migration docs.'
+    help = "Renders the migration docs."
 
     def add_arguments(self, parser):
         parser.add_argument(
-            'app_label',
-            nargs='*',
-            help='App labels of applications to limit the output to.',
+            "app_label",
+            nargs="*",
+            help="App labels of applications to limit the output to.",
         )
         parser.add_argument(
-            '--style',
-            default='default',
+            "--style",
+            default="default",
             help=(
-                'Rendering style, which corresponds to a'
-                ' .migration-docs/{style}_show.tpl Jinja template. If not'
-                ' specified, the default template is used.'
+                "Rendering style, which corresponds to a"
+                " .migration-docs/{style}_show.tpl Jinja template. If not"
+                " specified, the default template is used."
             ),
         )
         parser.add_argument(
-            '--unapplied',
-            action='store_true',
-            help='Only show unapplied migrations.',
+            "--unapplied",
+            action="store_true",
+            help="Only show unapplied migrations.",
         )
 
     def handle(self, *args, **options):
         rendered = migration_docs.show(
-            app_labels=options['app_label'],
-            unapplied=options['unapplied'],
-            style=options['style'],
+            app_labels=options["app_label"],
+            unapplied=options["unapplied"],
+            style=options["style"],
         )
-        print(rendered, end='')
+        print(rendered, end="")
 
 
 class UpdateCommand(BaseCommand):
-    help = 'Update migration docs for individual migrations.'
+    help = "Update migration docs for individual migrations."
 
     def add_arguments(self, parser):
         parser.add_argument(
-            'migration',
-            nargs='+',
+            "migration",
+            nargs="+",
             help='Migrations (e.g. "users.0001_initial") to update.',
         )
 
     def handle(self, *args, **options):
-        migration_docs.update(options['migration'])
+        migration_docs.update(options["migration"])
 
 
 class Command(SubCommands):
@@ -129,9 +129,9 @@ class Command(SubCommands):
      - 'update' docs for individual migrations.
     """
     subcommands = {
-        'bootstrap': BootstrapCommand,
-        'sync': SyncCommand,
-        'check': CheckCommand,
-        'show': ShowCommand,
-        'update': UpdateCommand,
+        "bootstrap": BootstrapCommand,
+        "sync": SyncCommand,
+        "check": CheckCommand,
+        "show": ShowCommand,
+        "update": UpdateCommand,
     }

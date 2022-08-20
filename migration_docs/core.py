@@ -30,7 +30,7 @@ def _get_migration_docs_file_root():
     """
     Get the root path to migration docs configuration files.
     """
-    return os.path.join(os.getcwd(), '.migration-docs')
+    return os.path.join(os.getcwd(), ".migration-docs")
 
 
 def _get_migration_docs_file_path(file_name):
@@ -40,12 +40,12 @@ def _get_migration_docs_file_path(file_name):
     return os.path.join(_get_migration_docs_file_root(), file_name)
 
 
-def _no_msg(msg, fg='green'):
+def _no_msg(msg, fg="green"):
     """A message printer that does nothing"""
     pass
 
 
-def _pretty_msg(msg, fg='green'):
+def _pretty_msg(msg, fg="green"):
     """A pretty message printer"""
     click.secho(msg, fg=fg)
 
@@ -113,7 +113,7 @@ class Migration:
 
         try:
             sql_statements = migration_sql_obj.collect_sql([(self._node, False)])
-            return '\n'.join(sql_statements)
+            return "\n".join(sql_statements)
         except Exception as exc:
             return f'Error obtaining SQL - "{exc}"'
 
@@ -154,9 +154,9 @@ class Migration:
         """
         if self.label not in self._docs:
             self._docs[self.label] = {}
-        self._docs[self.label]['_hash'] = self.hash
-        self._docs[self.label]['atomic'] = self.atomic
-        self._docs[self.label]['sql'] = self.sql
+        self._docs[self.label]["_hash"] = self.hash
+        self._docs[self.label]["atomic"] = self.atomic
+        self._docs[self.label]["sql"] = self.sql
 
         if prompt:
             self._docs[self.label].update(self._docs.schema.prompt(defaults=defaults))
@@ -170,7 +170,7 @@ class Migrations(utils.FilterableUserList):
     migration docs.
     """
 
-    def __init__(self, using='default', loader=None, executor=None):
+    def __init__(self, using="default", loader=None, executor=None):
         connection = connections[using]
         self._loader = loader or django_migration_loader.MigrationLoader(
             connection, ignore_no_migrations=True
@@ -210,7 +210,7 @@ class Migrations(utils.FilterableUserList):
             return self._migrations[i]
 
     def filter_by_missing_docs(self):
-        return self.intersect('label', set(self._migrations) - set(self._docs))
+        return self.intersect("label", set(self._migrations) - set(self._docs))
 
     def filter_by_stale_docs(self):
         labels = [
@@ -218,9 +218,9 @@ class Migrations(utils.FilterableUserList):
             for migration, docs in self._docs.items()
             if docs is not None
             and migration in self._migrations
-            and docs['_hash'] != self._migrations[migration].hash
+            and docs["_hash"] != self._migrations[migration].hash
         ]
-        return self.intersect('label', labels)
+        return self.intersect("label", labels)
 
     @property
     def excess_docs(self):
@@ -252,17 +252,17 @@ class MigrationDocs(collections.UserDict):
         self._msg = msg
 
         if not data:
-            docs_file = _get_migration_docs_file_path('docs.yaml')
+            docs_file = _get_migration_docs_file_path("docs.yaml")
             try:
-                with open(docs_file, 'r') as f:
+                with open(docs_file, "r") as f:
                     self.data = yaml.safe_load(f)
             except IOError:
                 self.data = {}
             except Exception as exc:
                 raise RuntimeError(
-                    'django-migration-docs: docs.yaml is corrupt and cannot'
-                    ' be parsed as YAML. Please fix the'
-                    ' .migration-docs/docs.yaml file.'
+                    "django-migration-docs: docs.yaml is corrupt and cannot"
+                    " be parsed as YAML. Please fix the"
+                    " .migration-docs/docs.yaml file."
                 ) from exc
         else:
             self.data = data
@@ -275,25 +275,25 @@ class MigrationDocs(collections.UserDict):
         description for the migration.
         """
         try:
-            with open(_get_migration_docs_file_path('migration.yaml'), 'r') as f:
+            with open(_get_migration_docs_file_path("migration.yaml"), "r") as f:
                 schema = yaml.safe_load(f)
         except IOError:
             schema = [
                 {
-                    'label': 'point_of_contact',
-                    'help': 'The point of contact for this migration.',
+                    "label": "point_of_contact",
+                    "help": "The point of contact for this migration.",
                 },
                 {
-                    'label': 'description',
-                    'help': 'An in-depth description of the migration.',
-                    'multiline': True,
+                    "label": "description",
+                    "help": "An in-depth description of the migration.",
+                    "multiline": True,
                 },
             ]
         except Exception as exc:
             raise RuntimeError(
-                'django-migration-docs: migration.yaml is corrupt and cannot'
-                ' be parsed as YAML. Please fix the'
-                ' .migration-docs/migration.yaml file.'
+                "django-migration-docs: migration.yaml is corrupt and cannot"
+                " be parsed as YAML. Please fix the"
+                " .migration-docs/migration.yaml file."
             ) from exc
 
         return formaldict.Schema(schema)
@@ -304,18 +304,18 @@ class MigrationDocs(collections.UserDict):
         Ensure docs are ordered when persisted to keep YAML consistently
         ordered
         """
-        docs_file = _get_migration_docs_file_path('docs.yaml')
+        docs_file = _get_migration_docs_file_path("docs.yaml")
 
         yaml.Dumper.add_representer(
             collections.OrderedDict,
-            lambda dumper, data: dumper.represent_mapping('tag:yaml.org,2002:map', data.items()),
+            lambda dumper, data: dumper.represent_mapping("tag:yaml.org,2002:map", data.items()),
         )
         ordered_docs = collections.OrderedDict(
             (label, docs) for label, docs in sorted(self.data.items())
         )
         yaml_str = yaml.dump(ordered_docs, Dumper=yaml.Dumper)
         pathlib.Path(docs_file).parent.mkdir(parents=True, exist_ok=True)
-        with open(docs_file, 'w+') as f:
+        with open(docs_file, "w+") as f:
             f.write(yaml_str)
 
 
@@ -331,11 +331,11 @@ def bootstrap(msg=_pretty_msg):
         RuntimeError: When migration docs have already been synced
     """
     if MigrationDocs():
-        raise RuntimeError('Cannot bootstrap when migration docs have already been synced.')
+        raise RuntimeError("Cannot bootstrap when migration docs have already been synced.")
 
     Migrations().bootstrap_docs()
 
-    msg('django-migration-docs: Docs successfully bootstrapped.')
+    msg("django-migration-docs: Docs successfully bootstrapped.")
 
 
 def sync(msg=_pretty_msg):
@@ -347,11 +347,11 @@ def sync(msg=_pretty_msg):
         msg (func): A message printer for showing messages to the user.
     """
     # Run any configured pre-sync hooks
-    pre_sync_hooks = getattr(settings, 'MIGRATION_DOCS_PRE_SYNC_HOOKS', [])
+    pre_sync_hooks = getattr(settings, "MIGRATION_DOCS_PRE_SYNC_HOOKS", [])
     if pre_sync_hooks:
-        msg('django-migration-docs: Running pre-sync hooks...')
+        msg("django-migration-docs: Running pre-sync hooks...")
         for pre_sync_hook in pre_sync_hooks:
-            msg(pre_sync_hook, fg='yellow')
+            msg(pre_sync_hook, fg="yellow")
             utils.shell(pre_sync_hook)
 
     migrations = Migrations()
@@ -362,19 +362,19 @@ def sync(msg=_pretty_msg):
     # Collect information for new migrations
     if missing_docs:
         msg(
-            'django-migration-docs: Found no docs for'
-            f' {len(missing_docs)} migration(s). Please enter'
-            ' more information.'
+            "django-migration-docs: Found no docs for"
+            f" {len(missing_docs)} migration(s). Please enter"
+            " more information."
         )
         for migration in missing_docs:
-            msg(f'{migration.label}:', fg='yellow')
+            msg(f"{migration.label}:", fg="yellow")
             migration.set_docs()
 
     # Update any stale documentation
     if stale_docs:
         msg(
-            f'django-migration-docs: Found {len(stale_docs)} stale'
-            ' migration doc(s). Docs updated automatically.'
+            f"django-migration-docs: Found {len(stale_docs)} stale"
+            " migration doc(s). Docs updated automatically."
         )
         for migration in stale_docs:
             migration.set_docs(prompt=False)
@@ -382,12 +382,12 @@ def sync(msg=_pretty_msg):
     # Delete old migrations
     if excess_docs:
         msg(
-            f'django-migration-docs: Found docs for {len(excess_docs)}'
-            ' deleted migration(s). Docs were removed.'
+            f"django-migration-docs: Found docs for {len(excess_docs)}"
+            " deleted migration(s). Docs were removed."
         )
         migrations.prune_excess_docs()
 
-    msg('django-migration-docs: Successfully synced migration docs.')
+    msg("django-migration-docs: Successfully synced migration docs.")
 
 
 def update(migrations, msg=_pretty_msg):
@@ -401,11 +401,11 @@ def update(migrations, msg=_pretty_msg):
     """
     migration_objs = Migrations()
     for migration in migrations:
-        msg(f'{migration}:', fg='yellow')
+        msg(f"{migration}:", fg="yellow")
         try:
             migration_objs[migration].set_docs()
         except KeyError:
-            msg(f'Migration with label "{migration}" does not exist.', fg='red')
+            msg(f'Migration with label "{migration}" does not exist.', fg="red")
 
 
 def check(msg=_pretty_msg):
@@ -428,34 +428,34 @@ def check(msg=_pretty_msg):
 
     if missing_docs:
         msg(
-            f'django-migration-docs: Found no docs for {len(missing_docs)}' ' migration(s).',
-            fg='red',
+            f"django-migration-docs: Found no docs for {len(missing_docs)}" " migration(s).",
+            fg="red",
         )
 
     if stale_docs:
         msg(
-            f'django-migration-docs: Found {len(stale_docs)} stale' ' migration doc(s).',
-            fg='red',
+            f"django-migration-docs: Found {len(stale_docs)} stale" " migration doc(s).",
+            fg="red",
         )
 
     if excess_docs:
         msg(
-            f'django-migration-docs: Found docs for {len(excess_docs)}' ' deleted migration(s).',
-            fg='red',
+            f"django-migration-docs: Found docs for {len(excess_docs)}" " deleted migration(s).",
+            fg="red",
         )
 
     if missing_docs or stale_docs or excess_docs:
         msg(
-            'django-migration-docs: Run "manage.py migration_docs sync" to' ' fix errors.',
-            fg='red',
+            'django-migration-docs: Run "manage.py migration_docs sync" to' " fix errors.",
+            fg="red",
         )
         return False
     else:
-        msg('django-migration-docs: Migration docs are up to date.')
+        msg("django-migration-docs: Migration docs are up to date.")
         return True
 
 
-def show(app_labels=None, unapplied=False, style='default'):
+def show(app_labels=None, unapplied=False, style="default"):
     """Shows migration docs to the user
 
     Args:
@@ -471,20 +471,20 @@ def show(app_labels=None, unapplied=False, style='default'):
     migrations = Migrations()
 
     if app_labels:
-        migrations = migrations.intersect('app_label', app_labels)
+        migrations = migrations.intersect("app_label", app_labels)
 
     if unapplied:
-        migrations = migrations.filter('applied', False)
+        migrations = migrations.filter("applied", False)
 
     env = jinja2.Environment(
         loader=jinja2.FileSystemLoader(_get_migration_docs_file_root()),
         trim_blocks=True,
     )
-    template_file = 'show.tpl' if style == 'default' else f'show_{style}.tpl'
+    template_file = "show.tpl" if style == "default" else f"show_{style}.tpl"
     try:
         template = env.get_template(template_file)
     except jinja2.exceptions.TemplateNotFound:
-        if style == 'default':
+        if style == "default":
             # Use the default migration template if the user didn't provide one
             template = jinja2.Template(DEFAULT_MIGRATION_TEMPLATE, trim_blocks=True)
         else:
