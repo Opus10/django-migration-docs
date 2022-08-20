@@ -20,20 +20,20 @@ def sync_docs_on_pre_migrate(plan, interactive, **kwargs):
 
     if (
         _current_migration_run != id(plan)
-        and getattr(settings, 'MIGRATION_DOCS_PRE_MIGRATE_SYNC', False)
+        and getattr(settings, "MIGRATION_DOCS_PRE_MIGRATE_SYNC", False)
         and interactive
     ):
-        call_command('migration_docs', 'sync')
+        call_command("migration_docs", "sync")
 
     _current_migration_run = id(plan)
 
 
 class MigrationDocsConfig(AppConfig):
-    name = 'migration_docs'
-    verbose_name = 'Migration Docs'
+    name = "migration_docs"
+    verbose_name = "Migration Docs"
 
     def ready(self):
         """
         Listen for pre-migrate signals and prompt for migration docs.
         """
-        pre_migrate.connect(sync_docs_on_pre_migrate, dispatch_uid='sync_docs_on_pre_migrate')
+        pre_migrate.connect(sync_docs_on_pre_migrate, dispatch_uid="sync_docs_on_pre_migrate")
