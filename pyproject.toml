@@ -29,7 +29,7 @@ packages = [
 exclude = [
   "*/tests/"
 ]
-version = "1.0.4"
+version = "1.0.5"
 description = "Sync and validate additional information about your Django migrations."
 authors = ["Juliana de Heer", "Wes Kendall", "Tómas Árni Jónasson"]
 classifiers = [
