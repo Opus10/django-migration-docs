@@ -33,6 +33,11 @@ version = "1.0.5"
 description = "Sync and validate additional information about your Django migrations."
 authors = ["Juliana de Heer", "Wes Kendall", "Tómas Árni Jónasson"]
 classifiers = [
+  "Framework :: Django",
+  "Framework :: Django :: 2.2",
+  "Framework :: Django :: 3.2",
+  "Framework :: Django :: 4.0",
+  "Framework :: Django :: 4.1",
   "Intended Audience :: Developers",
   "Operating System :: OS Independent",
   "Programming Language :: Python",
