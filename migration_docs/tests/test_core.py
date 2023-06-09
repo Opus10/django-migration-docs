@@ -79,7 +79,7 @@ def test_migration_properties(migration_name, attribute, expected_exception, exp
 def test_bad_migration_sql_collection(mocker):
     if (django.VERSION[0] >= 3 and django.VERSION[1] >= 1) or django.VERSION[0] >= 4:
         MigrationSqlClass = MigrationLoader
-    else:
+    else:  # pragma: no cover
         MigrationSqlClass = MigrationExecutor
 
     mocker.patch.object(

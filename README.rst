@@ -27,6 +27,11 @@ The default prompt looks like the following:
 Check out the `docs <https://django-migration-docs.readthedocs.io/>`__ for more information
 about how to use ``django-migration-docs`` in your application.
 
+Compatibility
+=============
+
+``django-migration-docs`` is compatible with Python 3.7 - 3.11 and Django 3.2 - 4.2.
+
 Documentation
 =============
 

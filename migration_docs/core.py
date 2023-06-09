@@ -108,7 +108,7 @@ class Migration:
         """The raw SQL for the migration"""
         if (django.VERSION[0] >= 3 and django.VERSION[1] >= 1) or django.VERSION[0] >= 4:
             migration_sql_obj = self._loader
-        else:
+        else:  # pragma: no cover
             migration_sql_obj = self._executor
 
         try:
