@@ -26,3 +26,8 @@ The default prompt looks like the following:
 
 To get started with ``django-migration-docs``, read the :ref:`Installation Guide <installation>`
 and then go to the :ref:`Tutorial`.
+
+Compatibility
+-------------
+
+``django-migration-docs`` is compatible with Python 3.7 -- 3.11 and  Django 3.2 -- 4.2.
