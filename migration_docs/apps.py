@@ -3,7 +3,6 @@ from django.conf import settings
 from django.core.management import call_command
 from django.db.models.signals import pre_migrate
 
-
 _current_migration_run = None
 
 
