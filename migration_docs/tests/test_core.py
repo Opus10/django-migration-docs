@@ -2,9 +2,9 @@
 from contextlib import ExitStack as does_not_raise
 
 import django
+import pytest
 from django.db.migrations.executor import MigrationExecutor
 from django.db.migrations.loader import MigrationLoader
-import pytest
 
 from migration_docs import core
 
@@ -18,7 +18,7 @@ from migration_docs import core
             "tests.0001_initial",
             "hash",
             does_not_raise(),
-            "fa1c7d508b8a863599d09b9569e9a362",
+            "4fc52e2588468f2922700a07cedb05fb",
         ),
         ("tests.0002_testmodel_field2", "atomic", does_not_raise(), True),
         (
@@ -151,4 +151,4 @@ def test_migration_schema_invalid_yaml(mocker, tmp_path):
     )
 
     with pytest.raises(RuntimeError, match="migration.yaml is corrupt"):
-        core.MigrationDocs().schema
+        core.MigrationDocs().schema  # noqa

@@ -3,20 +3,20 @@ import hashlib
 import inspect
 import os
 import pathlib
+from typing import Callable, List, Union
 
 import click
 import django
+import formaldict
+import jinja2
+import yaml
 from django.conf import settings
 from django.db import connections
 from django.db.migrations import executor as django_migration_executor
 from django.db.migrations import loader as django_migration_loader
 from django.utils.functional import cached_property
-import formaldict
-import jinja2
-import yaml
 
 from migration_docs import utils
-
 
 # The default Jinja template for showing migrations
 DEFAULT_MIGRATION_TEMPLATE = """
@@ -170,7 +170,12 @@ class Migrations(utils.FilterableUserList):
     migration docs.
     """
 
-    def __init__(self, using="default", loader=None, executor=None):
+    def __init__(
+        self,
+        using: str = "default",
+        loader: Union[django_migration_loader.MigrationLoader, None] = None,
+        executor: Union[django_migration_executor.MigrationExecutor, None] = None,
+    ):
         connection = connections[using]
         self._loader = loader or django_migration_loader.MigrationLoader(
             connection, ignore_no_migrations=True
@@ -210,9 +215,11 @@ class Migrations(utils.FilterableUserList):
             return self._migrations[i]
 
     def filter_by_missing_docs(self):
+        """Filter migration docs by ones that are missing"""
         return self.intersect("label", set(self._migrations) - set(self._docs))
 
     def filter_by_stale_docs(self):
+        """Filter migration docs by ones that are stale"""
         labels = [
             migration
             for migration, docs in self._docs.items()
@@ -224,9 +231,11 @@ class Migrations(utils.FilterableUserList):
 
     @property
     def excess_docs(self):
+        """Return additional docs"""
         return set(self._docs) - set(self._migrations)
 
     def prune_excess_docs(self):
+        """Remove additional docs"""
         for label in self.excess_docs:
             del self._docs[label]
 
@@ -239,14 +248,14 @@ class Migrations(utils.FilterableUserList):
 
 
 class MigrationDocs(collections.UserDict):
-    def __init__(self, data=None, msg=_pretty_msg):
+    def __init__(self, data: Union[dict, None] = None, msg: Callable = _pretty_msg):
         """
         Represents migration docs as a dictionary. Reads and persists docs as
         YAML.
 
         Args:
-            msg (func): Function for printing messages to the user.
-            data (dict, default=None): Data to use as migration docs. If None,
+            msg: Function for printing messages to the user.
+            data: Data to use as migration docs. If None,
                 load migration docs from the docs.yaml file.
         """
         self._msg = msg
@@ -268,7 +277,7 @@ class MigrationDocs(collections.UserDict):
             self.data = data
 
     @cached_property
-    def schema(self):
+    def schema(self) -> formaldict.Schema:
         """Loads the migration doc schema
 
         If not configured, returns a schema with a point of contact and
@@ -298,7 +307,7 @@ class MigrationDocs(collections.UserDict):
 
         return formaldict.Schema(schema)
 
-    def save(self):
+    def save(self) -> None:
         """Save all migration docs
 
         Ensure docs are ordered when persisted to keep YAML consistently
@@ -319,13 +328,13 @@ class MigrationDocs(collections.UserDict):
             f.write(yaml_str)
 
 
-def bootstrap(msg=_pretty_msg):
+def bootstrap(msg: Callable = _pretty_msg) -> None:
     """
     Bootstrap migration docs with filler values when integrating docs
     with a project for the first time.
 
     Args:
-        msg (func): A message printer for showing messages to the user.
+        msg: A message printer for showing messages to the user.
 
     Raises:
         RuntimeError: When migration docs have already been synced
@@ -338,13 +347,13 @@ def bootstrap(msg=_pretty_msg):
     msg("django-migration-docs: Docs successfully bootstrapped.")
 
 
-def sync(msg=_pretty_msg):
+def sync(msg: Callable = _pretty_msg) -> None:
     """
     Sync new migrations with the migration docs and prune migrations that
     no longer exist.
 
     Args:
-        msg (func): A message printer for showing messages to the user.
+        msg: A message printer for showing messages to the user.
     """
     # Run any configured pre-sync hooks
     pre_sync_hooks = getattr(settings, "MIGRATION_DOCS_PRE_SYNC_HOOKS", [])
@@ -390,14 +399,13 @@ def sync(msg=_pretty_msg):
     msg("django-migration-docs: Successfully synced migration docs.")
 
 
-def update(migrations, msg=_pretty_msg):
+def update(migrations: List[str], msg: Callable = _pretty_msg) -> None:
     """
     Update migration docs for specific migrations.
 
     Args:
-        migrations (List[str]): A list of migration labels to update
-            (e.g. users.0001_initial).
-        msg (func): A message printer for showing messages to the user.
+        migrations: A list of migration labels to update (e.g. users.0001_initial).
+        msg: A message printer for showing messages to the user.
     """
     migration_objs = Migrations()
     for migration in migrations:
@@ -408,7 +416,7 @@ def update(migrations, msg=_pretty_msg):
             msg(f'Migration with label "{migration}" does not exist.', fg="red")
 
 
-def check(msg=_pretty_msg):
+def check(msg: Callable = _pretty_msg) -> bool:
     """
     Check migration notes. Return False if any of the conditions hold true:
     - There are migrations without docs.
@@ -416,10 +424,10 @@ def check(msg=_pretty_msg):
     - There are stale migration docs.
 
     Args:
-        msg (func): A message printer for showing messages to the user.
+        msg: A message printer for showing messages to the user.
 
-    Raises:
-        bool: True when the migration docs are up to date, False otherwise.
+    Returns:
+        `True` when the migration docs are up to date, `False` otherwise.
     """
     migrations = Migrations()
     missing_docs = migrations.filter_by_missing_docs()
@@ -455,18 +463,19 @@ def check(msg=_pretty_msg):
         return True
 
 
-def show(app_labels=None, unapplied=False, style="default"):
+def show(
+    app_labels: Union[List[str], None] = None, unapplied: bool = False, style: str = "default"
+) -> str:
     """Shows migration docs to the user
 
     Args:
-        app_labels (List[str]): App labels to limit the shown migrations to.
-        unapplied (bool, default=False): Only show unapplied migrations.
-        style (str, default='default'): The style to use when rendering.
-            Corresponds to a Jinja template stored in
-            ``.migration-docs/{style}_show.tpl``.
+        app_labels: App labels to limit the shown migrations to.
+        unapplied: Only show unapplied migrations.
+        style: The style to use when rendering. Corresponds to a Jinja template stored in
+            `.migration-docs/{style}_show.tpl`.
 
     Returns:
-        str: The rendered migration list.
+        The rendered migration list.
     """
     migrations = Migrations()
 

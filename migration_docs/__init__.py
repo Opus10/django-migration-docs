@@ -1,14 +1,7 @@
 import django
 
-from migration_docs.core import bootstrap
-from migration_docs.core import check
-from migration_docs.core import Migration
-from migration_docs.core import Migrations
-from migration_docs.core import show
-from migration_docs.core import sync
-from migration_docs.core import update
+from migration_docs.core import Migration, Migrations, bootstrap, check, show, sync, update
 from migration_docs.version import __version__
-
 
 __all__ = [
     "bootstrap",

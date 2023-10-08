@@ -1,17 +1,16 @@
 """Integration tests for django-migration-docs"""
-from contextlib import ExitStack as does_not_raise
 import subprocess
+from contextlib import ExitStack as does_not_raise
 from unittest import mock
 
 import django
-from django.core.management import call_command
 import formaldict
 import jinja2.exceptions
 import pytest
 import yaml
+from django.core.management import call_command
 
-from migration_docs import core
-from migration_docs import utils
+from migration_docs import core, utils
 
 
 @pytest.fixture()
@@ -159,7 +158,7 @@ def test_migration_docs_show(
                 # Check the full SQL here, but dont do it for any other
                 # scenarios for the sake of verbosity
                 "tests.0001_initial": {
-                    "_hash": "fa1c7d508b8a863599d09b9569e9a362",
+                    "_hash": "4fc52e2588468f2922700a07cedb05fb",
                     "atomic": True,
                     "type": "before",
                     "sql": (
@@ -182,7 +181,7 @@ def test_migration_docs_show(
                     ),
                 },
                 "tests.0002_testmodel_field2": {
-                    "_hash": "2027cb75479b19ffeda154fc98821091",
+                    "_hash": "85d60942ace5acbdd2744d5ba88cbc4a",
                     "atomic": True,
                     "type": "after",
                     "sql": (
@@ -197,7 +196,7 @@ def test_migration_docs_show(
                     ),
                 },
                 "tests.0003_testmodel_field3": {
-                    "_hash": "407029dfc9b12aed509a8b59622bf109",
+                    "_hash": "da668fdffa3bb9435bf9773b0637fc8a",
                     "atomic": True,
                     "type": "before",
                     "sql": (
@@ -218,7 +217,7 @@ def test_migration_docs_show(
             # docs were last synced
             {
                 "tests.0001_initial": {
-                    "_hash": "fa1c7d508b8a863599d09b9569e9a362",
+                    "_hash": "4fc52e2588468f2922700a07cedb05fb",
                     "description": "This is a description.",
                 },
                 "tests.0002_testmodel_field2": {
@@ -226,7 +225,7 @@ def test_migration_docs_show(
                     "description": "This is another description.",
                 },
                 "tests.0003_testmodel_field3": {
-                    "_hash": "407029dfc9b12aed509a8b59622bf109",
+                    "_hash": "da668fdffa3bb9435bf9773b0637fc8a",
                     "description": "And description number 3.",
                 },
             },
@@ -239,17 +238,17 @@ def test_migration_docs_show(
             ),
             {
                 "tests.0001_initial": {
-                    "_hash": "fa1c7d508b8a863599d09b9569e9a362",
+                    "_hash": "4fc52e2588468f2922700a07cedb05fb",
                     "description": "This is a description.",
                 },
                 "tests.0002_testmodel_field2": {
-                    "_hash": "2027cb75479b19ffeda154fc98821091",
+                    "_hash": "85d60942ace5acbdd2744d5ba88cbc4a",
                     "description": "This is another description.",
                     "atomic": True,
                     "sql": mock.ANY,
                 },
                 "tests.0003_testmodel_field3": {
-                    "_hash": "407029dfc9b12aed509a8b59622bf109",
+                    "_hash": "da668fdffa3bb9435bf9773b0637fc8a",
                     "description": "And description number 3.",
                 },
             },
@@ -258,9 +257,9 @@ def test_migration_docs_show(
             # Test the scenario where there are extra migration docs that
             # should be deleted
             {
-                "tests.0001_initial": {"_hash": "fa1c7d508b8a863599d09b9569e9a362"},
-                "tests.0002_testmodel_field2": {"_hash": "2027cb75479b19ffeda154fc98821091"},
-                "tests.0003_testmodel_field3": {"_hash": "407029dfc9b12aed509a8b59622bf109"},
+                "tests.0001_initial": {"_hash": "4fc52e2588468f2922700a07cedb05fb"},
+                "tests.0002_testmodel_field2": {"_hash": "85d60942ace5acbdd2744d5ba88cbc4a"},
+                "tests.0003_testmodel_field3": {"_hash": "da668fdffa3bb9435bf9773b0637fc8a"},
                 "deleted_migration": {"_hash": "deleted_hash_value"},
             },
             [],
@@ -271,25 +270,25 @@ def test_migration_docs_show(
                 "django-migration-docs: Successfully synced migration docs.\n"
             ),
             {
-                "tests.0001_initial": {"_hash": "fa1c7d508b8a863599d09b9569e9a362"},
-                "tests.0002_testmodel_field2": {"_hash": "2027cb75479b19ffeda154fc98821091"},
-                "tests.0003_testmodel_field3": {"_hash": "407029dfc9b12aed509a8b59622bf109"},
+                "tests.0001_initial": {"_hash": "4fc52e2588468f2922700a07cedb05fb"},
+                "tests.0002_testmodel_field2": {"_hash": "85d60942ace5acbdd2744d5ba88cbc4a"},
+                "tests.0003_testmodel_field3": {"_hash": "da668fdffa3bb9435bf9773b0637fc8a"},
             },
         ),
         (
             # Test the scenario where all docs are up to date
             {
-                "tests.0001_initial": {"_hash": "fa1c7d508b8a863599d09b9569e9a362"},
-                "tests.0002_testmodel_field2": {"_hash": "2027cb75479b19ffeda154fc98821091"},
-                "tests.0003_testmodel_field3": {"_hash": "407029dfc9b12aed509a8b59622bf109"},
+                "tests.0001_initial": {"_hash": "4fc52e2588468f2922700a07cedb05fb"},
+                "tests.0002_testmodel_field2": {"_hash": "85d60942ace5acbdd2744d5ba88cbc4a"},
+                "tests.0003_testmodel_field3": {"_hash": "da668fdffa3bb9435bf9773b0637fc8a"},
             },
             [],
             [],
             ("django-migration-docs: Successfully synced migration docs.\n"),
             {
-                "tests.0001_initial": {"_hash": "fa1c7d508b8a863599d09b9569e9a362"},
-                "tests.0002_testmodel_field2": {"_hash": "2027cb75479b19ffeda154fc98821091"},
-                "tests.0003_testmodel_field3": {"_hash": "407029dfc9b12aed509a8b59622bf109"},
+                "tests.0001_initial": {"_hash": "4fc52e2588468f2922700a07cedb05fb"},
+                "tests.0002_testmodel_field2": {"_hash": "85d60942ace5acbdd2744d5ba88cbc4a"},
+                "tests.0003_testmodel_field3": {"_hash": "da668fdffa3bb9435bf9773b0637fc8a"},
             },
         ),
         (
@@ -297,16 +296,16 @@ def test_migration_docs_show(
             # were bootstrapped
             {
                 "tests.0001_initial": None,
-                "tests.0002_testmodel_field2": {"_hash": "2027cb75479b19ffeda154fc98821091"},
-                "tests.0003_testmodel_field3": {"_hash": "407029dfc9b12aed509a8b59622bf109"},
+                "tests.0002_testmodel_field2": {"_hash": "85d60942ace5acbdd2744d5ba88cbc4a"},
+                "tests.0003_testmodel_field3": {"_hash": "da668fdffa3bb9435bf9773b0637fc8a"},
             },
             [],
             [],
             ("django-migration-docs: Successfully synced migration docs.\n"),
             {
                 "tests.0001_initial": None,
-                "tests.0002_testmodel_field2": {"_hash": "2027cb75479b19ffeda154fc98821091"},
-                "tests.0003_testmodel_field3": {"_hash": "407029dfc9b12aed509a8b59622bf109"},
+                "tests.0002_testmodel_field2": {"_hash": "85d60942ace5acbdd2744d5ba88cbc4a"},
+                "tests.0003_testmodel_field3": {"_hash": "da668fdffa3bb9435bf9773b0637fc8a"},
             },
         ),
         (
@@ -314,8 +313,8 @@ def test_migration_docs_show(
             # were bootstrapped. Configures pre-sync hooks
             {
                 "tests.0001_initial": None,
-                "tests.0002_testmodel_field2": {"_hash": "2027cb75479b19ffeda154fc98821091"},
-                "tests.0003_testmodel_field3": {"_hash": "407029dfc9b12aed509a8b59622bf109"},
+                "tests.0002_testmodel_field2": {"_hash": "85d60942ace5acbdd2744d5ba88cbc4a"},
+                "tests.0003_testmodel_field3": {"_hash": "da668fdffa3bb9435bf9773b0637fc8a"},
             },
             ["black ."],
             [],
@@ -326,8 +325,8 @@ def test_migration_docs_show(
             ),
             {
                 "tests.0001_initial": None,
-                "tests.0002_testmodel_field2": {"_hash": "2027cb75479b19ffeda154fc98821091"},
-                "tests.0003_testmodel_field3": {"_hash": "407029dfc9b12aed509a8b59622bf109"},
+                "tests.0002_testmodel_field2": {"_hash": "85d60942ace5acbdd2744d5ba88cbc4a"},
+                "tests.0003_testmodel_field3": {"_hash": "da668fdffa3bb9435bf9773b0637fc8a"},
             },
         ),
     ],
@@ -375,7 +374,7 @@ def test_migration_docs_sync(
                 # Check the full SQL here, but dont do it for any other
                 # scenarios for the sake of verbosity
                 "tests.0001_initial": {
-                    "_hash": "fa1c7d508b8a863599d09b9569e9a362",
+                    "_hash": "4fc52e2588468f2922700a07cedb05fb",
                     "atomic": True,
                     "type": "before",
                     "sql": (
@@ -398,7 +397,7 @@ def test_migration_docs_sync(
                     ),
                 },
                 "tests.0002_testmodel_field2": {
-                    "_hash": "2027cb75479b19ffeda154fc98821091",
+                    "_hash": "85d60942ace5acbdd2744d5ba88cbc4a",
                     "atomic": True,
                     "type": "after",
                     "sql": (
@@ -429,7 +428,7 @@ def test_migration_docs_sync(
                 # Check the full SQL here, but dont do it for any other
                 # scenarios for the sake of verbosity
                 "tests.0001_initial": {
-                    "_hash": "fa1c7d508b8a863599d09b9569e9a362",
+                    "_hash": "4fc52e2588468f2922700a07cedb05fb",
                     "atomic": True,
                     "type": "before",
                     "sql": (
@@ -499,9 +498,9 @@ def test_migration_docs_update(
             # Test the scenario where one migration has been updated since
             # docs were last synced
             {
-                "tests.0001_initial": {"_hash": "fa1c7d508b8a863599d09b9569e9a362"},
+                "tests.0001_initial": {"_hash": "4fc52e2588468f2922700a07cedb05fb"},
                 "tests.0002_testmodel_field2": {"_hash": "outdated_hash"},
-                "tests.0003_testmodel_field3": {"_hash": "407029dfc9b12aed509a8b59622bf109"},
+                "tests.0003_testmodel_field3": {"_hash": "da668fdffa3bb9435bf9773b0637fc8a"},
             },
             (
                 "django-migration-docs: Found 1 stale migration doc(s).\n"
@@ -514,9 +513,9 @@ def test_migration_docs_update(
             # Test the scenario where there are extra migration docs that
             # should be deleted
             {
-                "tests.0001_initial": {"_hash": "fa1c7d508b8a863599d09b9569e9a362"},
-                "tests.0002_testmodel_field2": {"_hash": "2027cb75479b19ffeda154fc98821091"},
-                "tests.0003_testmodel_field3": {"_hash": "407029dfc9b12aed509a8b59622bf109"},
+                "tests.0001_initial": {"_hash": "4fc52e2588468f2922700a07cedb05fb"},
+                "tests.0002_testmodel_field2": {"_hash": "85d60942ace5acbdd2744d5ba88cbc4a"},
+                "tests.0003_testmodel_field3": {"_hash": "da668fdffa3bb9435bf9773b0637fc8a"},
                 "deleted_migration": None,
             },
             (
@@ -530,9 +529,9 @@ def test_migration_docs_update(
         (
             # Test the scenario where all docs are up to date
             {
-                "tests.0001_initial": {"_hash": "fa1c7d508b8a863599d09b9569e9a362"},
-                "tests.0002_testmodel_field2": {"_hash": "2027cb75479b19ffeda154fc98821091"},
-                "tests.0003_testmodel_field3": {"_hash": "407029dfc9b12aed509a8b59622bf109"},
+                "tests.0001_initial": {"_hash": "4fc52e2588468f2922700a07cedb05fb"},
+                "tests.0002_testmodel_field2": {"_hash": "85d60942ace5acbdd2744d5ba88cbc4a"},
+                "tests.0003_testmodel_field3": {"_hash": "da668fdffa3bb9435bf9773b0637fc8a"},
             },
             ("django-migration-docs: Migration docs are up to date.\n"),
             0,
@@ -616,17 +615,17 @@ def test_migration_filtering(migration_docs_config):
             yaml.safe_dump(
                 {
                     "tests.0001_initial": {
-                        "_hash": "fa1c7d508b8a863599d09b9569e9a362",
+                        "_hash": "4fc52e2588468f2922700a07cedb05fb",
                         "type": "before",
                         "point_of_contact": "john",
                     },
                     "tests.0002_testmodel_field2": {
-                        "_hash": "2027cb75479b19ffeda154fc98821091",
+                        "_hash": "85d60942ace5acbdd2744d5ba88cbc4a",
                         "type": "after",
                         "point_of_contact": "john",
                     },
                     "tests.0003_testmodel_field3": {
-                        "_hash": "407029dfc9b12aed509a8b59622bf109",
+                        "_hash": "da668fdffa3bb9435bf9773b0637fc8a",
                         "type": "before",
                     },
                 }
@@ -637,7 +636,7 @@ def test_migration_filtering(migration_docs_config):
 
     # Check various migration properties
     after_migration = list(migrations.filter("type", "after"))[0]
-    assert str(after_migration.hash) == "2027cb75479b19ffeda154fc98821091"
+    assert str(after_migration.hash) == "85d60942ace5acbdd2744d5ba88cbc4a"
 
     # Check various filterings
     assert len(migrations.filter("type", "before")) == 2
