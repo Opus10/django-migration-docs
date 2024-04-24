@@ -1,4 +1,5 @@
 """Unit tests for the core migration_docs module"""
+
 from contextlib import ExitStack as does_not_raise
 
 import django
