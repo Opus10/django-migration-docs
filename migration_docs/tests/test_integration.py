@@ -1,4 +1,5 @@
 """Integration tests for django-migration-docs"""
+
 import subprocess
 from contextlib import ExitStack as does_not_raise
 from unittest import mock

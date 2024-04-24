@@ -23,14 +23,13 @@ Check out the [docs](https://django-migration-docs.readthedocs.io) for more info
 Install `django-migration-docs` with:
 
     pip3 install django-migration-docs
-
 After this, add `migration_docs` to the `INSTALLED_APPS` setting of your Django project.
 
 ## Contributing Guide
 
 For information on setting up django-migration-docs for development and contributing changes, view [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Primary Authors
+## Creators
 
 - @juemura (Juliana de Heer)
 - @wesleykendall (Wes Kendall)
