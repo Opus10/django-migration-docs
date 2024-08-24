@@ -10,7 +10,6 @@ orbs:
             environment:
               # Ensure makefile commands are not wrapped in "docker compose run"
               EXEC_WRAPPER: ''
-              TOX_PARALLEL_NO_SPINNER: 1
               DATABASE_URL: postgres://root@localhost/circle_test?sslmode=disable
           - image: cimg/postgres:<<parameters.pg_version>>
             environment:
