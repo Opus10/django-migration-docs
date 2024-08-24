@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.3.0 (2024-08-24)
+
+### Feature
+
+  - Added Django 5.1 support.
+  - Dropped Django 3.2 support.
+
 ## 1.2.1 (2024-04-06)
 
 ### Trivial
