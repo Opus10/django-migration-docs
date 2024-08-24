@@ -8,7 +8,7 @@ orbs:
         docker:
           - image: opus10/circleci-python-library:2024-04-17
             environment:
-              # Ensure makefile commands are not wrapped in "docker-compose run"
+              # Ensure makefile commands are not wrapped in "docker compose run"
               EXEC_WRAPPER: ''
               TOX_PARALLEL_NO_SPINNER: 1
               DATABASE_URL: postgres://root@localhost/circle_test?sslmode=disable
@@ -69,16 +69,6 @@ jobs:
       - run: make dependencies
       - run: make type-check || true
 
-  check_changelog:
-    executor: opus10/python
-    steps:
-      - checkout
-      - restore_cache:
-          key: v4-{{ checksum "poetry.lock" }} 
-      - run: make dependencies
-      - run: git tidy-log origin/main..
-      - run: make tidy-lint
-
   deploy:
     executor: opus10/python
     steps:
@@ -111,4 +101,6 @@ workflows:
             - type_check
           filters:
             branches:
-              only: main
+              ignore: /.*/
+            tags:
+              only: /^v.*/
