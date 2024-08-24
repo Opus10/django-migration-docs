@@ -6,6 +6,7 @@
 # dependencies - Installs dependencies
 # docs - Build documentation
 # docs-serve - Serve documentation
+# docs-requirements - Build the docs requirements file
 # lint - Run code linting and static checks
 # lint-fix - Fix common linting errors
 # type-check - Run Pyright type-checking
@@ -35,7 +36,7 @@ else ifeq (${OS}, Darwin)
 endif
 
 # Docker run mounts the local code directory, SSH (for git), and global git config information
-DOCKER_RUN_CMD?=$(DOCKER_CMD)-compose run --name $(PACKAGE_NAME) $(DOCKER_RUN_ARGS) -d app
+DOCKER_RUN_CMD?=$(DOCKER_CMD) compose run --name $(PACKAGE_NAME) $(DOCKER_RUN_ARGS) -d app
 
 # Print usage of main targets when user types "make" or "make help"
 .PHONY: help
@@ -54,6 +55,7 @@ ifndef run
 	      "    type-check: Run Pyright type-checking\n"\
 	      "    docs: Build documentation\n"\
 	      "    docs-serve: Serve documentation\n"\
+	      "    docs-requirements: Build the docs requirements file\n"\
 	      "    docker-teardown: Spin down docker resources\n"\
 	      "\n"\
 	      "View the Makefile for more documentation"
@@ -66,7 +68,7 @@ endif
 # Pull the latest container and start a detached run
 .PHONY: docker-start
 docker-start:
-	$(DOCKER_CMD)-compose pull
+	$(DOCKER_CMD) compose pull
 	$(DOCKER_RUN_CMD)
 
 
@@ -80,13 +82,6 @@ lock:
 .PHONY: dependencies
 dependencies:
 	$(EXEC_WRAPPER) poetry install --no-ansi
-
-
-# Set up git configuration
-.PHONY: git-setup
-git-setup:
-	$(EXEC_WRAPPER) git tidy --template -o .gitcommit.tpl
-	$(EXEC_WRAPPER) git config --local commit.template .gitcommit.tpl
 
 
 # Sets up the local database
@@ -109,18 +104,18 @@ conda-create:
 # Sets up a Conda development environment
 .PHONY: conda-setup
 conda-setup: EXEC_WRAPPER=conda run -n ${PACKAGE_NAME} --no-capture-output
-conda-setup: conda-create lock dependencies git-setup db-setup
+conda-setup: conda-create lock dependencies db-setup
 
 
 # Sets up a Docker development environment
 .PHONY: docker-setup
-docker-setup: docker-teardown docker-start lock dependencies git-setup
+docker-setup: docker-teardown docker-start lock dependencies
 
 
 # Spin down docker resources
 .PHONY: docker-teardown
 docker-teardown:
-	$(DOCKER_CMD)-compose down --remove-orphans
+	$(DOCKER_CMD) compose down --remove-orphans
 
 
 # Run a shell
@@ -153,6 +148,12 @@ docs-serve:
 	$(EXEC_WRAPPER) mkdocs serve
 
 
+# Make the docs requirements file
+.PHONY: docs-requirements
+docs-requirements:
+	$(EXEC_WRAPPER) poetry export --dev --without-hashes -f requirements.txt > docs/requirements.txt
+
+
 # Run code linting and static analysis. Ensure docs can be built
 .PHONY: lint
 lint:
@@ -172,21 +173,3 @@ lint-fix:
 .PHONY: type-check
 type-check:
 	$(EXEC_WRAPPER) pyright $(MODULE_NAME)
-
-
-# Lint commit messages
-.PHONY: tidy-lint
-tidy-lint:
-	$(EXEC_WRAPPER) git tidy-lint origin/main..
-
-
-# Perform a tidy commit
-.PHONY: tidy-commit
-tidy-commit:
-	$(EXEC_WRAPPER) git tidy-commit
-
-
-# Perform a tidy squash
-.PHONY: tidy-squash
-tidy-squash:
-	$(EXEC_WRAPPER) git tidy-squash origin/main

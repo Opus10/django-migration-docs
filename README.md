@@ -12,7 +12,7 @@ Check out the [docs](https://django-migration-docs.readthedocs.io) for more info
 
 ## Compatibility
 
-`django-migration-docs` is compatible with Python 3.8 - 3.12 and Django 3.2 - 5.0..
+`django-migration-docs` is compatible with Python 3.8 - 3.12 and Django 4.2 - 5.1.
 
 ## Documentation
 
