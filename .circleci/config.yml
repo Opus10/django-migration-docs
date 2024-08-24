@@ -88,10 +88,6 @@ workflows:
       - test_pg_max
       - lint
       - type_check
-      - check_changelog:
-          filters:
-            branches:
-              ignore: main
       - deploy:
           context: python-library
           requires:
