@@ -464,7 +464,9 @@ def check(msg: Callable = _pretty_msg) -> bool:
 
 
 def show(
-    app_labels: Union[List[str], None] = None, unapplied: bool = False, style: str = "default"
+    app_labels: Union[List[str], None] = None,
+    unapplied: bool = False,
+    style: str = "default",
 ) -> str:
     """Shows migration docs to the user
 
