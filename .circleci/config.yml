@@ -83,10 +83,22 @@ workflows:
   version: 2
   on_commit:
     jobs:
-      - test_pg_min
-      - test_pg_max
-      - lint
-      - type_check
+      - test_pg_min:
+          filters:
+            tags:
+              only: /.*/
+      - test_pg_max:
+          filters:
+            tags:
+              only: /.*/
+      - lint:
+          filters:
+            tags:
+              only: /.*/
+      - type_check:
+          filters:
+            tags:
+              only: /.*/
       - deploy:
           context: python-library
           requires:
