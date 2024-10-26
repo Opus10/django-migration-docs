@@ -6,7 +6,6 @@
 # dependencies - Installs dependencies
 # docs - Build documentation
 # docs-serve - Serve documentation
-# docs-requirements - Build the docs requirements file
 # lint - Run code linting and static checks
 # lint-fix - Fix common linting errors
 # type-check - Run Pyright type-checking
@@ -55,7 +54,6 @@ ifndef run
 	      "    type-check: Run Pyright type-checking\n"\
 	      "    docs: Build documentation\n"\
 	      "    docs-serve: Serve documentation\n"\
-	      "    docs-requirements: Build the docs requirements file\n"\
 	      "    docker-teardown: Spin down docker resources\n"\
 	      "\n"\
 	      "View the Makefile for more documentation"
@@ -76,6 +74,7 @@ docker-start:
 .PHONY: lock
 lock:
 	$(EXEC_WRAPPER) poetry lock --no-update
+	$(EXEC_WRAPPER) poetry export --with dev --without-hashes -f requirements.txt > docs/requirements.txt
 
 
 # Install dependencies
@@ -146,12 +145,6 @@ docs:
 .PHONY: docs-serve
 docs-serve:
 	$(EXEC_WRAPPER) mkdocs serve
-
-
-# Make the docs requirements file
-.PHONY: docs-requirements
-docs-requirements:
-	$(EXEC_WRAPPER) poetry export --with dev --without-hashes -f requirements.txt > docs/requirements.txt
 
 
 # Run code linting and static analysis. Ensure docs can be built
