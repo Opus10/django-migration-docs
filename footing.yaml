@@ -1,7 +1,7 @@
 _extensions:
 - jinja2_time.TimeExtension
 _template: git@github.com:Opus10/public-django-app-template.git
-_version: f0aafbff5c138aa9d3051d6b5d612a7dd1a74914
+_version: 072543e27d8b506a6628f7793798609c62d6a8ae
 check_types_in_ci: 'False'
 is_django: 'True'
 module_name: migration_docs
