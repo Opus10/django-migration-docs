@@ -12,4 +12,4 @@ To get started with `django-migration-docs`, read the [Installation Guide](insta
 
 ## Compatibility
 
-`django-migration-docs` is compatible with Python 3.8 - 3.12 and Django 4.2 - 5.1.
+`django-migration-docs` is compatible with Python 3.9 - 3.13 and Django 4.2 - 5.1.

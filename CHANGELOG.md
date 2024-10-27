@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.0 (2024-10-26)
+
+#### Changes
+
+  - Added Python 3.13 support, dropped Python 3.8 support by [@wesleykendall](https://github.com/wesleykendall) in [#18](https://github.com/Opus10/django-migration-docs/pull/18).
+
 ## 1.3.0 (2024-08-24)
 
 #### Changes
